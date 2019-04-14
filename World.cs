@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Linq;
 using TheGame.Configuration;
 using TheGame.Enums;
+using TheGame.Utilities;
 
 namespace TheGame
 {
@@ -10,6 +12,7 @@ namespace TheGame
     {
         public WorldState WorldState { get; set; }
         private WorldConfiguration configuration;
+        private readonly int deadCountdown = 80;
         private readonly WorldConfigurationParser worldConfigurationParser;
 
         public World(int configuredWindowWidth, int configuredWindowHeight)
@@ -40,7 +43,7 @@ namespace TheGame
             }
         }
 
-        public void HandleCollisions()
+        public void HandleCollisions(int currentFrame)
         {
             foreach(var objectInGame in WorldState.WokenObjects)
             {
@@ -75,7 +78,7 @@ namespace TheGame
             {
                 if (WorldState.Character.DetectCollision(objectInGame.Hitbox))
                 {
-                    WorldState.Character.LethalCollision(objectInGame);
+                    WorldState.Character.LethalCollision(objectInGame, currentFrame);
                 }
             }
 
@@ -97,6 +100,11 @@ namespace TheGame
             WorldState.Character.SaveLastPosition();
             WorldState.Character.MoveVertically(keyboardState.IsKeyDown(Keys.Up), deltaTime);
             WorldState.Character.MoveHorizontally(keyboardState.IsKeyDown(Keys.Right), keyboardState.IsKeyDown(Keys.Left), deltaTime);
+        }
+
+        public void CheckState(FrameCounter frameCounter)
+        {
+            WorldState.ObjectsInGame.RemoveAll(x => x.State == ObjectStateType.Dead && frameCounter.Difference(x.FrameWhenDied) > deadCountdown);
         }
     }
 }

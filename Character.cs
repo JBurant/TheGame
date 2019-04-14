@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
 using TheGame.Enums;
 using TheGame.Utilities;
 
@@ -7,16 +7,15 @@ namespace TheGame
     public class Character : ObjectInGame
     {
         public bool isJumping;
-        private bool isFalling;
         private float jumpTime;
         private readonly float jumpSpeed;
         private readonly float fallSpeed;
         private const float maxJumpTime = 0.5f;
 
-        public Character(int x, int y, string textureFile) : base(x, y, textureFile, 2)
+        public Character(int x, int y, TextureInfo textureInfo) : base(x, y, textureInfo, 2)
         {
-            Speed = 50f;
-            jumpSpeed = 180f;
+            Speed = 100f;
+            jumpSpeed = 150f;
             fallSpeed = 180f;
         }
 
@@ -24,25 +23,26 @@ namespace TheGame
         {
             if(isUp)
             {
-                Jump(deltaTime);
+                isJumping = true;
             }
 
             if (isJumping)
             {
+
                 Y -= (int)(jumpSpeed * deltaTime);
                 jumpTime += deltaTime;
-                isFalling = false;
 
                 if (jumpTime > maxJumpTime)
                 {
                     isJumping = false;
                     jumpTime = 0;
                 }
+
+                MoveDirection = MoveDirectionType.Up;
             }
             else
             {
                 Fall(deltaTime);
-                isFalling = true;
             }
         }
 
@@ -51,25 +51,15 @@ namespace TheGame
             Y += (int)(fallSpeed * deltaTime);
         }
 
-        public void Jump(float deltaTime)
-        {
-            if (!isJumping)
-            {
-                isJumping = true;
-                Y -= (int)(jumpSpeed * deltaTime);
-                jumpTime += deltaTime;
-            }
-        }
-
-        public override void LethalCollision(ObjectInGame enemy)
+        public void LethalCollision(ObjectInGame enemy, int frameWhenDied)
         {
             if(!(LastPosition.Y < Y))
             {
-                Die();
+                Die(frameWhenDied);
             }
             else
             {
-                enemy.Die();
+                enemy.Die(frameWhenDied);
             }
         }
 
@@ -78,12 +68,25 @@ namespace TheGame
             if(right)
             {
                 MoveRight(deltaTime);
+                MoveDirection = MoveDirectionType.Right;
             }
 
             if(left)
             {
                 MoveLeft(deltaTime);
+                MoveDirection = MoveDirectionType.Left;
             }
+        }
+
+        protected override Rectangle GetAnimation()
+        {
+            if (MoveDirection == MoveDirectionType.None) column = 0;
+            if (MoveDirection == MoveDirectionType.Left) column = 1;
+            if (MoveDirection == MoveDirectionType.Right) column = 2;
+            if (MoveDirection == MoveDirectionType.Up) column = 3;
+            if (MoveDirection == MoveDirectionType.Down) column = 4;
+
+            return new Rectangle(TextureInfo.Width * column, 0, TextureInfo.Width, TextureInfo.Height);
         }
     }
 }

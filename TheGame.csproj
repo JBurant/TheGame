@@ -44,8 +44,6 @@
   <ItemGroup>
     <Compile Include="Configuration\WorldConfiguration.cs" />
     <Compile Include="Configuration\WorldConfigurationParser.cs" />
-    <Compile Include="Enums\CollisionDirectionType.cs" />
-    <Compile Include="Enums\CollisionResultType.cs" />
     <Compile Include="Enums\MoveDirectionType.cs" />
     <Compile Include="Objects\BackgroundObject.cs" />
     <Compile Include="Objects\Critter.cs" />
@@ -60,7 +58,9 @@
     <Compile Include="GameStatistic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\FrameCounter.cs" />
     <Compile Include="Utilities\ObjectSpecification.cs" />
+    <Compile Include="Utilities\TextureInfo.cs" />
     <Compile Include="Utilities\Vector2Int.cs" />
     <Compile Include="World.cs" />
     <Compile Include="WorldConfigurationLoader.cs" />

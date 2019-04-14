@@ -9,7 +9,13 @@ namespace TheGame.Enums
     public enum MoveDirectionType
     {
         None,
+        Right,
         Left,
-        Right
+        Up,
+        Down,
+        RightDown,
+        RightUp,
+        LeftDown,
+        LeftUp
     }
 }

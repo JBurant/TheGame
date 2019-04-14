@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Cow2.png</SourceFile>
-  <SourceTime>2019-04-13T17:10:34.1106459+02:00</SourceTime>
+  <SourceTime>2019-04-14T18:48:35.0415031+02:00</SourceTime>
   <DestFile>C:/Users/jirib/source/repos/TheGame/TheGame/Content/bin/DesktopGL/Content/Game/Cow2.xnb</DestFile>
-  <DestTime>2019-04-13T17:14:59.3059598+02:00</DestTime>
+  <DestTime>2019-04-14T18:48:53.6262754+02:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-09-23T23:55:52+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

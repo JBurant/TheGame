@@ -1,16 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TheGame.Enums;
+using TheGame.Utilities;
 
 namespace TheGame.Objects
 {
     public class Critter : ObjectInGame
     {
-        public Critter(int x, int y, string textureFile, float speed, MoveDirectionType initialMoveDirection) : base(x, y, textureFile, true, initialMoveDirection)
+        public Critter(int x, int y, TextureInfo textureInfo, float speed, MoveDirectionType initialMoveDirection) : base(x, y, textureInfo, true, initialMoveDirection)
         {
             Speed = speed;
         }

@@ -1,43 +1,44 @@
 ﻿using TheGame.Enums;
 using TheGame.Objects;
+using TheGame.Utilities;
 
 namespace TheGame
 {
     public class ObjectsFactory
     {
-        public Character GetCharacter(int x, int y)
+        public Character GetCharacter(int x, int y, TextureInfo textureInfo)
         {
-            return new Character(x, y, "Game/Character");
+            return new Character(x, y, textureInfo);
         }
 
-        public ObjectInGame GetCow(int x, int y)
+        public ObjectInGame GetCow(int x, int y, TextureInfo textureInfo)
         {
-            return new Critter(x, y, "Game/Cow", 20f, MoveDirectionType.Left);
+            return new Critter(x, y, textureInfo, 20f, MoveDirectionType.Left);
         }
 
-        public BackgroundObject GetBackground()
+        public BackgroundObject GetBackground(TextureInfo textureInfo)
         {
-            return new BackgroundObject(0, 0, "Game/Sky");
+            return new BackgroundObject(0, 0, textureInfo, 1);
         }
 
-        public Landscape GetLandscape(int x, int y)
+        public Landscape GetLandscape(int x, int y, TextureInfo textureInfo)
         {
-            return new Landscape(x, y, "Game/Land");
+            return new Landscape(x, y, textureInfo);
         }
 
-        public ObjectInGame GetTree(int x, int y)
+        public ObjectInGame GetTree(int x, int y, TextureInfo textureInfo)
         {
-            return new ObjectInGame(x, y, "Game/Tree");
+            return new ObjectInGame(x, y, textureInfo);
         }
 
-        public BackgroundObject GetCloud(int x, int y)
+        public BackgroundObject GetCloud(int x, int y, TextureInfo textureInfo)
         {
-            return new BackgroundObject(x, y, "Game/Cloud");
+            return new BackgroundObject(x, y, textureInfo, 1);
         }
 
-        public BackgroundObject GetCloud2(int x, int y)
+        public BackgroundObject GetCloud2(int x, int y, TextureInfo textureInfo)
         {
-            return new BackgroundObject(x, y, "Game/Cloud");
+            return new BackgroundObject(x, y, textureInfo, 1);
         }
     }
 }

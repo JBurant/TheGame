@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TheGame.Enums;
+using TheGame.Utilities;
 
 namespace TheGame
 {
@@ -17,6 +18,7 @@ namespace TheGame
         private GameState gameState;
 
         private SpriteFont font;
+        private FrameCounter frameCounter;
 
         public Game1()
         {
@@ -25,6 +27,7 @@ namespace TheGame
             Content.RootDirectory = "Content";
             world = new World(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             gameState = new GameState();
+            frameCounter = new FrameCounter(100);
         }
 
         /// <summary>
@@ -57,17 +60,17 @@ namespace TheGame
 
             foreach (var landscape in world.WorldState.Landscape)
             {
-                landscape.Texture = Content.Load<Texture2D>(landscape.TextureFile);
+                landscape.Texture = Content.Load<Texture2D>(landscape.TextureInfo.TextureFile);
                 landscape.SetHitbox();
             }
 
             foreach(var objectInGame in world.WorldState.ObjectsInGame)
             {
-                objectInGame.Texture = Content.Load<Texture2D>(objectInGame.TextureFile);
+                objectInGame.Texture = Content.Load<Texture2D>(objectInGame.TextureInfo.TextureFile);
                 objectInGame.SetHitbox();
             }
 
-            world.WorldState.Character.Texture = Content.Load<Texture2D>(world.WorldState.Character.TextureFile);
+            world.WorldState.Character.Texture = Content.Load<Texture2D>(world.WorldState.Character.TextureInfo.TextureFile);
             world.WorldState.Character.SetHitbox();
 
             gameState.RunState = RunStateType.Running;
@@ -93,16 +96,18 @@ namespace TheGame
                 Exit();
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            frameCounter.Increment();
 
             if (gameState.RunState == RunStateType.Running)
             {
                 CheckGameState();
+                world.CheckState(frameCounter);
                 // TODO: Add your update logic here
                 world.MoveCharacter(Keyboard.GetState(), deltaTime);
                 //world.MoveWorld();
                 world.Move(deltaTime);
                 world.WakeUpSleepers();
-                world.HandleCollisions();
+                world.HandleCollisions(frameCounter.Frame);
             }   
 
             base.Update(gameTime);

@@ -14,56 +14,65 @@ namespace TheGame
         public ObjectStateType State { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
         public Rectangle Hitbox { get; set; }
         public float Speed { get; set; }
         public Texture2D Texture { get; set; }
-        public string TextureFile { get; }
+        public TextureInfo TextureInfo { get; }
         public bool IsDeadly { get; set; }
-
+        public int LastFrameChange { get; set; }
+        public int FrameWhenDied { get; set; }
         public Vector2 LastPosition { get; set; }
+
+        protected int column;
 
         private static int MaxX;
         private static int MinX;
 
-        public ObjectInGame(int x, int y, string textureFile)
+        public ObjectInGame(int x, int y, TextureInfo textureInfo)
         {
             State = ObjectStateType.Asleep;
             X = x;
             Y = y;
-            TextureFile = textureFile;
+            TextureInfo = textureInfo;
             MoveDirection = MoveDirectionType.None;
             IsDeadly = false;
+            column = 0;
 
             scale = 3; //Harcoded for now
         }
 
-        public ObjectInGame(int x, int y, string textureFile, bool isDeadly, MoveDirectionType initialMoveDirection)
+        public ObjectInGame(int x, int y, TextureInfo textureInfo, bool isDeadly, MoveDirectionType initialMoveDirection)
         {
             State = ObjectStateType.Asleep;
             X = x;
             Y = y;
             IsDeadly = isDeadly;
-            TextureFile = textureFile;
+            TextureInfo = textureInfo;
             MoveDirection = initialMoveDirection;
+            column = 0;
 
             scale = 3; //Harcoded for now
         }
 
-        public ObjectInGame(int x, int y, string textureFile, float scale)
+        public ObjectInGame(int x, int y, TextureInfo textureInfo, float scale)
         {
             State = ObjectStateType.Asleep;
             X = x;
             Y = y;
             IsDeadly = false;
-            TextureFile = textureFile;
+            TextureInfo = textureInfo;
             MoveDirection = MoveDirectionType.None;
+            column = 0;
 
             this.scale = scale;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, new Vector2(X, Y), null, Color.White, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
+            var sourceAnimation = GetAnimation();
+            spriteBatch.Draw(Texture, new Vector2(X, Y), sourceAnimation, Color.White, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
         }
 
         public virtual void Move(float deltaTime)
@@ -74,9 +83,9 @@ namespace TheGame
         {
             X += (int)(Speed * scale * deltaTime);
 
-            if (X > MaxX - Texture.Width * scale)
+            if (X > MaxX - TextureInfo.Width * scale)
             {
-                X = (int)(MaxX - Texture.Width * scale);
+                X = (int)(MaxX - TextureInfo.Width * scale);
                 MoveDirection = MoveDirectionType.Left;
             }
         }
@@ -95,17 +104,17 @@ namespace TheGame
         public virtual void SetHitbox()
         {
             AdjustPosition();
-            Hitbox = new Rectangle((int)X, (int)Y, (int)(Texture.Width * scale), (int)(Texture.Height * scale));
+            Hitbox = new Rectangle(X, Y, (int)(TextureInfo.Width * scale), (int)(TextureInfo.Height * scale));
         }
 
         public virtual void RecalculateHitBox()
         {
-            Hitbox = new Rectangle((int)X, (int)Y, (int)(Texture.Width * scale), (int)(Texture.Height * scale));
+            Hitbox = new Rectangle(X, Y, (int)(TextureInfo.Width * scale), (int)(TextureInfo.Height * scale));
         }
 
         protected void AdjustPosition()
         {
-            Y -= (int)(Texture.Height * scale);
+            Y -= (int)(TextureInfo.Height * scale);
         }
 
         public static void SetXBoundaries(int minX, int maxX)
@@ -122,11 +131,6 @@ namespace TheGame
             Y = newPosition.Y;
         }
 
-        public virtual void LethalCollision(ObjectInGame enemy)
-        {
-
-        }
-
         public virtual bool DetectCollision(Rectangle box2)
         {
             if(box2 == null)
@@ -141,21 +145,6 @@ namespace TheGame
             {
                 return true;
             }
-            return false;
-        }
-
-        /*
-        protected virtual void MoveVertically(float deltaTime)
-        {
-            if (!LowerCollisionDetected())
-            {
-                Fall(deltaTime);
-            }
-        }*/
-
-        protected virtual bool LowerCollisionDetected()
-        {
-
             return false;
         }
 
@@ -221,8 +210,9 @@ namespace TheGame
             }
         }
 
-        public virtual void Die()
+        public virtual void Die(int frameWhenDied)
         {
+            FrameWhenDied = frameWhenDied;
             State = ObjectStateType.Dead;
         }
 
@@ -231,5 +221,16 @@ namespace TheGame
         {
             LastPosition = new Vector2(X, Y);
         }
+
+        #region Animation
+        protected virtual Rectangle GetAnimation()
+        {
+            if (MoveDirection == MoveDirectionType.None) column = 0;
+            if (MoveDirection == MoveDirectionType.Left) column = 0;
+            if (MoveDirection == MoveDirectionType.Right) column = 1;
+
+            return new Rectangle(TextureInfo.Width * column, 0, TextureInfo.Width, TextureInfo.Height);
+        }
+        #endregion Animation
     }
 }
