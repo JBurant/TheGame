@@ -10,6 +10,7 @@
     <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Cloud2.png</File>
     <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Cow.png</File>
     <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Cow2.png</File>
+    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/GameFont.spritefont</File>
     <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Land.png</File>
     <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/sky.png</File>
     <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Template.png</File>
@@ -18,6 +19,7 @@
     <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Windmill.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

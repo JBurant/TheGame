@@ -10,18 +10,9 @@ namespace TheGame.Objects
 {
     public class Critter : ObjectInGame
     {
-        public MoveDirectionType MoveDirection { get; set; }
-
-        public Critter(int x, int y, string textureFile, float speed) : base(x, y, textureFile, true)
+        public Critter(int x, int y, string textureFile, float speed, MoveDirectionType initialMoveDirection) : base(x, y, textureFile, true, initialMoveDirection)
         {
             Speed = speed;
-            MoveDirection = MoveDirectionType.None;
-        }
-
-        public Critter(int x, int y, string textureFile, float speed, MoveDirectionType initialMoveDirection) : base(x, y, textureFile)
-        {
-            Speed = speed;
-            MoveDirection = initialMoveDirection;
         }
 
         public override void Move(float deltaTime)

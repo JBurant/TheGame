@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 using TheGame.Configuration;
+using TheGame.Enums;
 
 namespace TheGame
 {
@@ -23,7 +25,7 @@ namespace TheGame
 
         public void Move(float deltaTime)
         {
-            foreach(var objectInGame in WorldState.ObjectsInGame)
+            foreach(var objectInGame in WorldState.WokenObjects)
             {
                 objectInGame.SaveLastPosition();
                 objectInGame.Move(deltaTime);
@@ -32,12 +34,15 @@ namespace TheGame
 
         public void WakeUpSleepers()
         {
-
+            foreach(var objectInGame in WorldState.AsleepObjects)
+            {
+                objectInGame.State = ObjectStateType.Woken;
+            }
         }
 
         public void HandleCollisions()
         {
-            foreach(var objectInGame in WorldState.ObjectsInGame)
+            foreach(var objectInGame in WorldState.WokenObjects)
             {
                 objectInGame.RecalculateHitBox();
             }
@@ -50,21 +55,6 @@ namespace TheGame
             WorldState.Character.RecalculateHitBox();
 
             //Collide Character
-            foreach (var objectInGame in WorldState.ObjectsInGame)
-            {
-                if (WorldState.Character.DetectCollision(objectInGame.Hitbox))
-                {
-                    if (objectInGame.IsDeadly)
-                    {
-                        WorldState.Character.LethalCollision(objectInGame);
-                    }
-                    else
-                    {
-                        WorldState.Character.NonLethalCollision(objectInGame.Hitbox);
-                    }
-                }
-            }
-
             foreach (var landscape in WorldState.Landscape)
             {
                 if (WorldState.Character.DetectCollision(landscape.Hitbox))
@@ -72,11 +62,34 @@ namespace TheGame
                     WorldState.Character.NonLethalCollision(landscape.Hitbox);
                 }
             }
-        }
 
-        public void CollideObjects(ObjectInGame obj1, ObjectInGame obj2)
-        {
+            foreach (var objectInGame in WorldState.WokenObjects.Where(x => x.IsDeadly == false))
+            {
+                if (WorldState.Character.DetectCollision(objectInGame.Hitbox))
+                {
+                    WorldState.Character.NonLethalCollision(objectInGame.Hitbox);
+                }
+            }
 
+            foreach (var objectInGame in WorldState.WokenObjects.Where(x => x.IsDeadly == true))
+            {
+                if (WorldState.Character.DetectCollision(objectInGame.Hitbox))
+                {
+                    WorldState.Character.LethalCollision(objectInGame);
+                }
+            }
+
+                //Collide objects with each other
+            foreach (var objectInGame in WorldState.WokenObjects)
+            {
+                foreach (var objectInGame2 in WorldState.WokenObjects.Where(x => x != objectInGame))
+                {
+                    if (objectInGame.DetectCollision(objectInGame2.Hitbox))
+                    {
+                        objectInGame.NonLethalCollision(objectInGame2.Hitbox);
+                    }
+                }
+            }
         }
 
         public void MoveCharacter(KeyboardState keyboardState, float deltaTime)

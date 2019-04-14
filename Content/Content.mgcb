@@ -85,6 +85,13 @@
 /processorParam:TextureFormat=Color
 /build:Game/Cow2.png
 
+#begin Game/GameFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Game/GameFont.spritefont
+
 #begin Game/Land.png
 /importer:TextureImporter
 /processor:TextureProcessor

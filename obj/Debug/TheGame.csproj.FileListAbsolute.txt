@@ -29,3 +29,4 @@ C:\Users\jirib\source\repos\TheGame\TheGame\bin\DesktopGL\AnyCPU\Debug\Content\G
 C:\Users\jirib\source\repos\TheGame\TheGame\bin\DesktopGL\AnyCPU\Debug\Content\Game\Character.xnb
 C:\Users\jirib\source\repos\TheGame\TheGame\bin\DesktopGL\AnyCPU\Debug\Content\Game\Cow2.xnb
 C:\Users\jirib\source\repos\TheGame\TheGame\obj\Debug\TheGame.csprojAssemblyReference.cache
+C:\Users\jirib\source\repos\TheGame\TheGame\bin\DesktopGL\AnyCPU\Debug\Content\Game\GameFont.xnb

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TheGame.Enums;
 
 namespace TheGame
 {
@@ -13,7 +14,9 @@ namespace TheGame
         private SpriteBatch spriteBatch;
 
         private World world;
-        private GameState state;
+        private GameState gameState;
+
+        private SpriteFont font;
 
         public Game1()
         {
@@ -21,7 +24,7 @@ namespace TheGame
             graphics.ToggleFullScreen();
             Content.RootDirectory = "Content";
             world = new World(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            state = new GameState();
+            gameState = new GameState();
         }
 
         /// <summary>
@@ -42,13 +45,17 @@ namespace TheGame
         /// </summary>
         protected override void LoadContent()
         {
+            gameState.RunState = RunStateType.Loading;
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
             world.Load();
 
-            foreach(var landscape in world.WorldState.Landscape)
+            font = Content.Load<SpriteFont>("Game/GameFont");
+
+            foreach (var landscape in world.WorldState.Landscape)
             {
                 landscape.Texture = Content.Load<Texture2D>(landscape.TextureFile);
                 landscape.SetHitbox();
@@ -62,6 +69,8 @@ namespace TheGame
 
             world.WorldState.Character.Texture = Content.Load<Texture2D>(world.WorldState.Character.TextureFile);
             world.WorldState.Character.SetHitbox();
+
+            gameState.RunState = RunStateType.Running;
         }
 
         /// <summary>
@@ -85,12 +94,16 @@ namespace TheGame
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // TODO: Add your update logic here
-            world.MoveCharacter(Keyboard.GetState(), deltaTime);
-            //world.MoveWorld();
-            world.Move(deltaTime);
-            world.WakeUpSleepers();
-            world.HandleCollisions();
+            if (gameState.RunState == RunStateType.Running)
+            {
+                CheckGameState();
+                // TODO: Add your update logic here
+                world.MoveCharacter(Keyboard.GetState(), deltaTime);
+                //world.MoveWorld();
+                world.Move(deltaTime);
+                world.WakeUpSleepers();
+                world.HandleCollisions();
+            }   
 
             base.Update(gameTime);
         }
@@ -106,21 +119,36 @@ namespace TheGame
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            foreach(var landscape in world.WorldState.Landscape)
+            if(gameState.RunState == RunStateType.Running)
             {
-                landscape.Draw(spriteBatch);
-            }
+                foreach(var landscape in world.WorldState.Landscape)
+                {
+                    landscape.Draw(spriteBatch);
+                }
 
-            foreach(var objectInGame in world.WorldState.ObjectsInGame)
+                foreach(var objectInGame in world.WorldState.ObjectsInGame)
+                {
+                    objectInGame.Draw(spriteBatch);
+                }
+
+                world.WorldState.Character.Draw(spriteBatch);
+            }
+            else if (gameState.RunState == RunStateType.Finishing)
             {
-                objectInGame.Draw(spriteBatch);
+                spriteBatch.DrawString(font, "U DED", new Vector2(100, 100), Color.Black);
             }
-
-            world.WorldState.Character.Draw(spriteBatch);
 
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        private void CheckGameState()
+        {
+            if(world.WorldState.Character.State == ObjectStateType.Dead)
+            {
+                gameState.RunState = RunStateType.Finishing;
+            }
         }
     }
 }

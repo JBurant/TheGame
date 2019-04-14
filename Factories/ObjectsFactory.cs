@@ -12,7 +12,7 @@ namespace TheGame
 
         public ObjectInGame GetCow(int x, int y)
         {
-            return new Critter(x, y, "Game/Cow", 20f, MoveDirectionType.Right);
+            return new Critter(x, y, "Game/Cow", 20f, MoveDirectionType.Left);
         }
 
         public BackgroundObject GetBackground()
@@ -27,7 +27,7 @@ namespace TheGame
 
         public ObjectInGame GetTree(int x, int y)
         {
-            return new ObjectInGame(x, y, "Game/Tree", false);
+            return new ObjectInGame(x, y, "Game/Tree");
         }
 
         public BackgroundObject GetCloud(int x, int y)

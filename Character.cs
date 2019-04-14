@@ -11,13 +11,13 @@ namespace TheGame
         private float jumpTime;
         private readonly float jumpSpeed;
         private readonly float fallSpeed;
-        private const float maxJumpTime = 1f;
+        private const float maxJumpTime = 0.5f;
 
-        public Character(int x, int y, string textureFile) : base(x, y, textureFile, false, 2)
+        public Character(int x, int y, string textureFile) : base(x, y, textureFile, 2)
         {
             Speed = 50f;
-            jumpSpeed = 80f;
-            fallSpeed = 100f;
+            jumpSpeed = 180f;
+            fallSpeed = 180f;
         }
 
         public void MoveVertically(bool isUp, float deltaTime)
@@ -41,15 +41,8 @@ namespace TheGame
             }
             else
             {
-                if(!LowerCollisionDetected())
-                {
-                    Fall(deltaTime);
-                    isFalling = true;
-                }
-                else
-                {
-                    isFalling = false;
-                }
+                Fall(deltaTime);
+                isFalling = true;
             }
         }
 
@@ -70,7 +63,7 @@ namespace TheGame
 
         public override void LethalCollision(ObjectInGame enemy)
         {
-            if(!isFalling)
+            if(!(LastPosition.Y < Y))
             {
                 Die();
             }

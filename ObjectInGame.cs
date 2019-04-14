@@ -10,6 +10,7 @@ namespace TheGame
     {
         private readonly float scale;
 
+        public MoveDirectionType MoveDirection { get; set; }
         public ObjectStateType State { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
@@ -24,35 +25,40 @@ namespace TheGame
         private static int MaxX;
         private static int MinX;
 
-        public ObjectInGame(int x, int y, string textureFile, bool isDeadly)
-        {
-            State = ObjectStateType.Asleep;
-            X = x;
-            Y = y;
-            IsDeadly = isDeadly;
-            TextureFile = textureFile;
-
-            scale = 3; //Harcoded for now
-        }
-
-        public ObjectInGame(int x, int y, string textureFile, bool isDeadly, float scale)
-        {
-            State = ObjectStateType.Asleep;
-            X = x;
-            Y = y;
-            TextureFile = textureFile;
-
-            this.scale = scale;
-        }
-
         public ObjectInGame(int x, int y, string textureFile)
         {
             State = ObjectStateType.Asleep;
             X = x;
             Y = y;
             TextureFile = textureFile;
+            MoveDirection = MoveDirectionType.None;
+            IsDeadly = false;
 
             scale = 3; //Harcoded for now
+        }
+
+        public ObjectInGame(int x, int y, string textureFile, bool isDeadly, MoveDirectionType initialMoveDirection)
+        {
+            State = ObjectStateType.Asleep;
+            X = x;
+            Y = y;
+            IsDeadly = isDeadly;
+            TextureFile = textureFile;
+            MoveDirection = initialMoveDirection;
+
+            scale = 3; //Harcoded for now
+        }
+
+        public ObjectInGame(int x, int y, string textureFile, float scale)
+        {
+            State = ObjectStateType.Asleep;
+            X = x;
+            Y = y;
+            IsDeadly = false;
+            TextureFile = textureFile;
+            MoveDirection = MoveDirectionType.None;
+
+            this.scale = scale;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -71,6 +77,7 @@ namespace TheGame
             if (X > MaxX - Texture.Width * scale)
             {
                 X = (int)(MaxX - Texture.Width * scale);
+                MoveDirection = MoveDirectionType.Left;
             }
         }
 
@@ -81,6 +88,7 @@ namespace TheGame
             if (X < MinX)
             {
                 X = MinX;
+                MoveDirection = MoveDirectionType.Right;
             }
         }
 
@@ -169,41 +177,47 @@ namespace TheGame
             float alphaX = 0;
             float alphaY = 0;
 
-            if (Hitbox.Right > box2.Left && !(Math.Floor(LastPosition.X) + Hitbox.Size.X > box2.Left))
+            if (moveX != 0)
             {
-                alphaX = (Hitbox.Right - box2.Left) / moveX;
-            }
-            else if (Hitbox.Left < box2.Right && !(Math.Floor(LastPosition.X) < box2.Right))
-            {
-                alphaX = (Hitbox.Left - box2.Right) / moveX;
+                if (Hitbox.Right > box2.Left && !(Math.Floor(LastPosition.X) + Hitbox.Size.X > box2.Left))
+                {
+                    alphaX = (Hitbox.Right - box2.Left) / moveX;
+                }
+                else if (Hitbox.Left < box2.Right && !(Math.Floor(LastPosition.X) < box2.Right))
+                {
+                    alphaX = (Hitbox.Left - box2.Right) / moveX;
+                }
             }
 
-            if (Hitbox.Bottom > box2.Top && !(Math.Floor(LastPosition.Y) + Hitbox.Size.Y > box2.Top))
+            if(moveY != 0)
             {
-                alphaY = (Hitbox.Bottom - box2.Top) / moveY;
-            }
-            else if (Hitbox.Top < box2.Bottom && !(Math.Floor(LastPosition.Y) < box2.Bottom))
-            {
-                alphaY = (Hitbox.Top - box2.Bottom) / moveY;
+                if (Hitbox.Bottom > box2.Top && !(Math.Floor(LastPosition.Y) + Hitbox.Size.Y > box2.Top))
+                {
+                    alphaY = (Hitbox.Bottom - box2.Top) / moveY;
+                }
+                else if (Hitbox.Top < box2.Bottom && !(Math.Floor(LastPosition.Y) < box2.Bottom))
+                {
+                    alphaY = (Hitbox.Top - box2.Bottom) / moveY;
+                }
             }
 
             if(alphaX == 0)
             {
-                return new Vector2Int(X - (int)(alphaY * moveX), Y - (int)(alphaY * moveY));
+                return new Vector2Int(X , Y - (int)(alphaY * moveY));
             }
 
             if (alphaY == 0)
             {
-                return new Vector2Int(X - (int)(alphaX * moveX), Y - (int)(alphaX * moveY));
+                return new Vector2Int(X - (int)(alphaX * moveX), Y);
             }
 
             if (alphaX < alphaY)
             {
-                return new Vector2Int(X - (int)(alphaX * moveX), Y - (int)(alphaX * moveY));
+                return new Vector2Int(X - (int)(alphaX * moveX), Y);
             }
             else
             {
-                return new Vector2Int(X - (int)(alphaY * moveX), Y - (int)(alphaY * moveY));
+                return new Vector2Int(X, Y - (int)(alphaY * moveY));
             }
         }
 
