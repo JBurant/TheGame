@@ -102,9 +102,9 @@ namespace TheGame
             {
                 CheckGameState();
                 world.CheckState(frameCounter);
-                // TODO: Add your update logic here
+
                 world.MoveCharacter(Keyboard.GetState(), deltaTime);
-                //world.MoveWorld();
+                world.MoveWorld();
                 world.Move(deltaTime);
                 world.WakeUpSleepers();
                 world.HandleCollisions(frameCounter.Frame);
