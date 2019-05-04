@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using TheGame.Factories;
+using TheGame.Objects;
 using TheGame.Utilities;
 
 namespace TheGame.Configuration
@@ -8,6 +11,10 @@ namespace TheGame.Configuration
         private ObjectsFactory objectsFactory;
         private readonly int configuredWindowWidth;
         private readonly int configuredWindowHeight;
+
+        private List<ObjectInGame>  objectsInGame = new List<ObjectInGame>();
+        private List<Landscape>landscape = new List<Landscape>();
+        private Character character;
 
         public WorldConfigurationParser(int configuredWindowWidth, int configuredWindowHeight)
         {
@@ -19,64 +26,42 @@ namespace TheGame.Configuration
 
         public WorldState ParseConfiguration(WorldConfiguration configuration)
         {
-            var objectsInGame = new List<ObjectInGame>();
-            var landscape = new List<Landscape>();
-
             ObjectInGame.SetXBoundaries(0, configuredWindowWidth);
+            ObjectInGame.SetYBoundaries(0, configuredWindowHeight);
 
             foreach (var objectSpecification in configuration.ObjectsInGame)
             {
                 objectSpecification.X = objectSpecification.X * configuredWindowWidth;
                 objectSpecification.Y = objectSpecification.Y * configuredWindowHeight;
                 
-                objectsInGame.Add(ResolveObject(objectSpecification.Name, (int)objectSpecification.X, (int)objectSpecification.Y, objectSpecification.Width, objectSpecification.Height));
+                ResolveObject(objectSpecification);
             }
-
-            foreach (var objectSpecification in configuration.Landscape)
-            {
-                objectSpecification.X = objectSpecification.X * configuredWindowWidth;
-                objectSpecification.Y = objectSpecification.Y * configuredWindowHeight;
-
-                landscape.Add(ResolveLandscape(objectSpecification.Name, (int)objectSpecification.X, (int)objectSpecification.Y, objectSpecification.Width, objectSpecification.Height));
-            }
-
-            var characterSpecification = configuration.Character;
-
-            characterSpecification.X = characterSpecification.X * configuredWindowWidth;
-            characterSpecification.Y = characterSpecification.Y * configuredWindowHeight;
-
-            var character = ResolveCharacter(characterSpecification.Name, (int)characterSpecification.X, (int)characterSpecification.Y, characterSpecification.Width, characterSpecification.Height);
 
             return new WorldState(objectsInGame, landscape, character);
         }
 
-        private ObjectInGame ResolveObject(string name, int x, int y, int width, int height)
+        private void ResolveObject(ObjectSpecification objectSpecification)
         {
-            var textureInfo = new TextureInfo(name, width, height);
+            var x = (int)objectSpecification.X; 
+            var y = (int)objectSpecification.Y;
 
-            switch (name)
+            switch (objectSpecification.TextureInfo.TextureFile)
             {
-                case "Game/Cow": return objectsFactory.GetCow(x, y, textureInfo);
-                case "Game/Tree": return objectsFactory.GetTree(x, y, textureInfo);
-                case "Game/Sky": return objectsFactory.GetBackground(textureInfo);
-                case "Game/Cloud": return objectsFactory.GetCloud(x, y, textureInfo);
-                case "Game/Cloud2": return objectsFactory.GetCloud2(x, y, textureInfo);
-                default: return null;
+                case "Game/Cow": objectsInGame.Add(objectsFactory.GetCow(x, y, objectSpecification.TextureInfo));
+                    break;
+                case "Game/Tree": objectsInGame.Add(objectsFactory.GetTree(x, y, objectSpecification.TextureInfo));
+                    break;
+                case "Game/Sky": objectsInGame.Add(objectsFactory.GetBackground(objectSpecification.TextureInfo));
+                    break;
+                case "Game/Cloud": objectsInGame.Add(objectsFactory.GetCloud(x, y, objectSpecification.TextureInfo));
+                    break;
+                case "Game/Cloud2": objectsInGame.Add(objectsFactory.GetCloud2(x, y, objectSpecification.TextureInfo));
+                    break;
+                case "Game/Land": landscape.Add(objectsFactory.GetLandscape(x, y, objectSpecification.TextureInfo));
+                    break;
+                case "Game/Character": character = objectsFactory.GetCharacter(x, y, objectSpecification.TextureInfo);
+                    break;
             }
-        }
-
-        private Landscape ResolveLandscape(string name, int x, int y, int width, int height)
-        {
-            switch (name)
-            {
-                case "Game/Land": return objectsFactory.GetLandscape(x, y, new TextureInfo(name, width, height));
-                default: return null;
-            }
-        }
-
-        private Character ResolveCharacter(string name, int x, int y, int width, int height)
-        {
-            return objectsFactory.GetCharacter(x, y, new TextureInfo(name, width, height));
         }
     }
 }

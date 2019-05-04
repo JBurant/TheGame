@@ -1,47 +1,33 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using TheGame.Animation;
 using TheGame.Enums;
 using TheGame.Utilities;
 
-namespace TheGame
+namespace TheGame.Objects
 {
     public class ObjectInGame
     {
         private readonly float scale;
 
-        public MoveDirectionType MoveDirection { get; set; }
+        protected MoveDirectionType MoveDirection { get; set; }
         public ObjectStateType State { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
         public Rectangle Hitbox { get; set; }
         public float Speed { get; set; }
         public Texture2D Texture { get; set; }
-        public TextureInfo TextureInfo { get; }
         public bool IsDeadly { get; set; }
         public int LastFrameChange { get; set; }
         public int FrameWhenDied { get; set; }
         public Vector2 LastPosition { get; set; }
 
-        protected int column;
-
+        protected IAnimationResolver animationResolver;
         private static int MaxX;
         private static int MinX;
-
-        public ObjectInGame(int x, int y, TextureInfo textureInfo)
-        {
-            State = ObjectStateType.Asleep;
-            X = x;
-            Y = y;
-            TextureInfo = textureInfo;
-            MoveDirection = MoveDirectionType.None;
-            IsDeadly = false;
-            column = 0;
-
-            scale = 3; //Harcoded for now
-        }
+        private static int MaxY;
+        private static int MinY;
 
         public ObjectInGame(int x, int y, TextureInfo textureInfo, bool isDeadly, MoveDirectionType initialMoveDirection)
         {
@@ -49,9 +35,8 @@ namespace TheGame
             X = x;
             Y = y;
             IsDeadly = isDeadly;
-            TextureInfo = textureInfo;
+            animationResolver = new StaticAnimationResolver(textureInfo);
             MoveDirection = initialMoveDirection;
-            column = 0;
 
             scale = 3; //Harcoded for now
         }
@@ -62,17 +47,16 @@ namespace TheGame
             X = x;
             Y = y;
             IsDeadly = false;
-            TextureInfo = textureInfo;
+            animationResolver = new StaticAnimationResolver(textureInfo);
             MoveDirection = MoveDirectionType.None;
-            column = 0;
 
             this.scale = scale;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            var sourceAnimation = GetAnimation();
-            spriteBatch.Draw(Texture, new Vector2(X, Y), sourceAnimation, Color.White, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
+            var sourceAnimation = animationResolver.GetAnimation(X, MoveDirection);
+            spriteBatch.Draw(Texture, new Vector2(X - MinX, Y), sourceAnimation, Color.White, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
         }
 
         public virtual void Move(float deltaTime)
@@ -83,9 +67,9 @@ namespace TheGame
         {
             X += (int)(Speed * scale * deltaTime);
 
-            if (X > MaxX - TextureInfo.Width * scale)
+            if (X > MaxX - animationResolver.TextureInfo.Width * scale)
             {
-                X = (int)(MaxX - TextureInfo.Width * scale);
+                X = (int)(MaxX - animationResolver.TextureInfo.Width * scale);
                 MoveDirection = MoveDirectionType.Left;
             }
         }
@@ -103,18 +87,13 @@ namespace TheGame
 
         public virtual void SetHitbox()
         {
-            AdjustPosition();
-            Hitbox = new Rectangle(X, Y, (int)(TextureInfo.Width * scale), (int)(TextureInfo.Height * scale));
+            Y -= (int)(animationResolver.TextureInfo.Height * scale);
+            Hitbox = new Rectangle(X, Y, (int)(animationResolver.TextureInfo.Width * scale), (int)(animationResolver.TextureInfo.Height * scale));
         }
 
         public virtual void RecalculateHitBox()
         {
-            Hitbox = new Rectangle(X, Y, (int)(TextureInfo.Width * scale), (int)(TextureInfo.Height * scale));
-        }
-
-        protected void AdjustPosition()
-        {
-            Y -= (int)(TextureInfo.Height * scale);
+            Hitbox = new Rectangle(X, Y, (int)(animationResolver.TextureInfo.Width * scale), (int)(animationResolver.TextureInfo.Height * scale));
         }
 
         public static void SetXBoundaries(int minX, int maxX)
@@ -123,42 +102,21 @@ namespace TheGame
             MinX = minX;
         }
 
+        public static void SetYBoundaries(int minY, int maxY)
+        {
+            MaxY = maxY;
+            MinY = minY;
+        }
+
+        public void CheckFallDeath(int frameWhenDied)
+        {
+            if (Y > MaxY)
+            {
+                Die(frameWhenDied);
+            }
+        }
+
         public virtual void NonLethalCollision(Rectangle box2)
-        {
-            var newPosition = GetAdjustedPosition(box2);
-
-            X = newPosition.X;
-            Y = newPosition.Y;
-        }
-
-        public virtual bool DetectCollision(Rectangle box2)
-        {
-            if(box2 == null)
-            {
-                return false;
-            }
-
-            if (Hitbox.Left < box2.Right &&
-                Hitbox.Right > box2.Left &&
-                Hitbox.Top < box2.Bottom &&
-                Hitbox.Bottom > box2.Top)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        protected virtual void SetRightAnimation()
-        {
-            
-        }
-
-        protected virtual void SetLeftAnimation()
-        {
-
-        }
-
-        protected Vector2Int GetAdjustedPosition(Rectangle box2)
         {
             var moveX = X - LastPosition.X;
             var moveY = Y - LastPosition.Y;
@@ -178,7 +136,7 @@ namespace TheGame
                 }
             }
 
-            if(moveY != 0)
+            if (moveY != 0)
             {
                 if (Hitbox.Bottom > box2.Top && !(Math.Floor(LastPosition.Y) + Hitbox.Size.Y > box2.Top))
                 {
@@ -190,24 +148,41 @@ namespace TheGame
                 }
             }
 
-            if(alphaX == 0)
+            if (alphaX == 0)
             {
-                return new Vector2Int(X , Y - (int)(alphaY * moveY));
+                Y = Y - (int)(alphaY * moveY);
             }
 
             if (alphaY == 0)
             {
-                return new Vector2Int(X - (int)(alphaX * moveX), Y);
+                X = X - (int)(alphaX * moveX);
             }
 
             if (alphaX < alphaY)
             {
-                return new Vector2Int(X - (int)(alphaX * moveX), Y);
+                X = X - (int)(alphaX * moveX);
             }
             else
             {
-                return new Vector2Int(X, Y - (int)(alphaY * moveY));
+                Y = Y - (int)(alphaY * moveY);
             }
+        }
+
+        public virtual bool DetectCollision(Rectangle box2)
+        {
+            if(box2 == null)
+            {
+                return false;
+            }
+
+            if (Hitbox.Left < box2.Right &&
+                Hitbox.Right > box2.Left &&
+                Hitbox.Top < box2.Bottom &&
+                Hitbox.Bottom > box2.Top)
+            {
+                return true;
+            }
+            return false;
         }
 
         public virtual void Die(int frameWhenDied)
@@ -216,21 +191,14 @@ namespace TheGame
             State = ObjectStateType.Dead;
         }
 
-
         public void SaveLastPosition()
         {
             LastPosition = new Vector2(X, Y);
         }
 
-        #region Animation
-        protected virtual Rectangle GetAnimation()
+        public string GetTextureFile()
         {
-            if (MoveDirection == MoveDirectionType.None) column = 0;
-            if (MoveDirection == MoveDirectionType.Left) column = 0;
-            if (MoveDirection == MoveDirectionType.Right) column = 1;
-
-            return new Rectangle(TextureInfo.Width * column, 0, TextureInfo.Width, TextureInfo.Height);
+            return animationResolver.TextureInfo.TextureFile;
         }
-        #endregion Animation
     }
 }

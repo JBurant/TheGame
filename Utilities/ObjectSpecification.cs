@@ -2,19 +2,15 @@
 {
     public class ObjectSpecification
     {
-        public string Name { get; }
+        public TextureInfo TextureInfo { get; }
         public float X { get; set; }
         public float Y { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
 
-        public ObjectSpecification(string name, float positionX, float positionY, int width, int height)
+        public ObjectSpecification(TextureInfo textureInfo, float x, float y)
         {
-            Name = name;
-            X = positionX;
-            Y = positionY;
-            Width = width;
-            Height = height;
+            TextureInfo = textureInfo;
+            X = x;
+            Y = y;
         }
     }
 }

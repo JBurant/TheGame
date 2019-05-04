@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TheGame.Configuration;
+﻿using TheGame.Configuration;
 
-namespace TheGame
+namespace TheGame.Configuration
 {
     public static class WorldConfigurationLoader
     {

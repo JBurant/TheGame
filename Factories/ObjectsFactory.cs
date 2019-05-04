@@ -2,7 +2,7 @@
 using TheGame.Objects;
 using TheGame.Utilities;
 
-namespace TheGame
+namespace TheGame.Factories
 {
     public class ObjectsFactory
     {
@@ -28,7 +28,7 @@ namespace TheGame
 
         public ObjectInGame GetTree(int x, int y, TextureInfo textureInfo)
         {
-            return new ObjectInGame(x, y, textureInfo);
+            return new ObjectInGame(x, y, textureInfo, 3);
         }
 
         public BackgroundObject GetCloud(int x, int y, TextureInfo textureInfo)

@@ -53,25 +53,15 @@ namespace TheGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
             world.Load();
 
             font = Content.Load<SpriteFont>("Game/GameFont");
 
-            foreach (var landscape in world.WorldState.Landscape)
+            foreach (var gameObject in world.WorldState.AllGameObjects)
             {
-                landscape.Texture = Content.Load<Texture2D>(landscape.TextureInfo.TextureFile);
-                landscape.SetHitbox();
+                gameObject.Texture = Content.Load<Texture2D>(gameObject.GetTextureFile());
+                gameObject.SetHitbox();
             }
-
-            foreach(var objectInGame in world.WorldState.ObjectsInGame)
-            {
-                objectInGame.Texture = Content.Load<Texture2D>(objectInGame.TextureInfo.TextureFile);
-                objectInGame.SetHitbox();
-            }
-
-            world.WorldState.Character.Texture = Content.Load<Texture2D>(world.WorldState.Character.TextureInfo.TextureFile);
-            world.WorldState.Character.SetHitbox();
 
             gameState.RunState = RunStateType.Running;
         }
@@ -126,17 +116,10 @@ namespace TheGame
 
             if(gameState.RunState == RunStateType.Running)
             {
-                foreach(var landscape in world.WorldState.Landscape)
+                foreach(var gameObject in world.WorldState.AllGameObjects)
                 {
-                    landscape.Draw(spriteBatch);
+                    gameObject.Draw(spriteBatch);
                 }
-
-                foreach(var objectInGame in world.WorldState.ObjectsInGame)
-                {
-                    objectInGame.Draw(spriteBatch);
-                }
-
-                world.WorldState.Character.Draw(spriteBatch);
             }
             else if (gameState.RunState == RunStateType.Finishing)
             {

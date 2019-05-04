@@ -1,9 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using System;
+﻿using Microsoft.Xna.Framework.Input;
 using System.Linq;
 using TheGame.Configuration;
 using TheGame.Enums;
+using TheGame.Objects;
 using TheGame.Utilities;
 
 namespace TheGame
@@ -11,13 +10,10 @@ namespace TheGame
     public class World
     {
         public WorldState WorldState { get; set; }
-        private WorldConfiguration configuration;
-        private readonly int deadCountdown = 80;
+        private const int DeadCountdown = 80;
+        private const float MoveWorldTreshold = 0.8f;
         private readonly WorldConfigurationParser worldConfigurationParser;
-        private int leftWorldXPosition;
         private readonly int windowWidth;
-
-        private const int WorldMoveStep = 5;
 
         public World(int configuredWindowWidth, int configuredWindowHeight)
         {
@@ -27,8 +23,7 @@ namespace TheGame
 
         public void Load()
         {
-            configuration = WorldConfigurationLoader.GetConfiguration();
-            WorldState = worldConfigurationParser.ParseConfiguration(configuration);
+            WorldState = worldConfigurationParser.ParseConfiguration(WorldConfigurationLoader.GetConfiguration());
         }
 
         public void Move(float deltaTime)
@@ -42,15 +37,16 @@ namespace TheGame
 
         public void MoveWorld()
         {
-            if (WorldState.Character.Hitbox.Right > (windowWidth - WorldMoveStep))
+            if ((WorldState.Character.Hitbox.Right - WorldState.WorldPosition) > (int)(MoveWorldTreshold * windowWidth))
             {
-                leftWorldXPosition += WorldMoveStep;
+                WorldState.WorldPosition += (WorldState.Character.Hitbox.Right - WorldState.WorldPosition) - (int)(MoveWorldTreshold * windowWidth);
+                ObjectInGame.SetXBoundaries(WorldState.WorldPosition, WorldState.WorldPosition + windowWidth);
             }
         }
 
         public void WakeUpSleepers()
         {
-            foreach(var objectInGame in WorldState.AsleepObjects.Where(x => x.X < leftWorldXPosition + windowWidth))
+            foreach(var objectInGame in WorldState.AsleepObjects.Where(x => x.X < WorldState.WorldPosition + windowWidth))
             {
                 objectInGame.State = ObjectStateType.Woken;
             }
@@ -79,19 +75,18 @@ namespace TheGame
                 }
             }
 
-            foreach (var objectInGame in WorldState.WokenObjects.Where(x => x.IsDeadly == false))
+            foreach (var objectInGame in WorldState.WokenObjects)
             {
                 if (WorldState.Character.DetectCollision(objectInGame.Hitbox))
                 {
-                    WorldState.Character.NonLethalCollision(objectInGame.Hitbox);
-                }
-            }
-
-            foreach (var objectInGame in WorldState.WokenObjects.Where(x => x.IsDeadly == true))
-            {
-                if (WorldState.Character.DetectCollision(objectInGame.Hitbox))
-                {
-                    WorldState.Character.LethalCollision(objectInGame, currentFrame);
+                    if(objectInGame.IsDeadly)
+                    {
+                        WorldState.Character.LethalCollision(objectInGame, currentFrame);
+                    }
+                    else
+                    {
+                        WorldState.Character.NonLethalCollision(objectInGame.Hitbox);
+                    }
                 }
             }
 
@@ -106,6 +101,9 @@ namespace TheGame
                     }
                 }
             }
+
+            //Check fall death for character
+            WorldState.Character.CheckFallDeath(currentFrame);
         }
 
         public void MoveCharacter(KeyboardState keyboardState, float deltaTime)
@@ -117,8 +115,7 @@ namespace TheGame
 
         public void CheckState(FrameCounter frameCounter)
         {
-            WorldState.Character.AdjustAnimations(frameCounter);
-            WorldState.ObjectsInGame.RemoveAll(x => x.State == ObjectStateType.Dead && frameCounter.Difference(x.FrameWhenDied) > deadCountdown);
+            WorldState.ObjectsInGame.RemoveAll(x => x.State == ObjectStateType.Dead && frameCounter.Difference(x.FrameWhenDied) > DeadCountdown);
         }
     }
 }
