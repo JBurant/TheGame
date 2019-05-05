@@ -1,75 +1,37 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using TheGame.Animation;
 using TheGame.Enums;
+using TheGame.Move;
 using TheGame.Utilities;
 
 namespace TheGame.Objects
 {
-    public class Character : ObjectInGame
+    public class Character : ForegroundObject
     {
-        public bool isJumping;
-        private float jumpTime;
-        private float lastJumpTime;
-
-        private readonly float jumpSpeed;
-        private readonly float fallSpeed;
-        private const float maxJumpTime = 0.75f;
+        private CharacterMoveHandler moveHandler;
 
         public Character(int x, int y, TextureInfo textureInfo) : base(x, y, textureInfo, 2)
         {
-            Speed = 100f;
-            jumpSpeed = 300f;
-            fallSpeed = jumpSpeed;
-
             animationResolver = new CharacterAnimationResolver(textureInfo, new int[] { 1, 5 }, new int[] { 2, 6 });
+            moveHandler = new CharacterMoveHandler(300, 300, 300);
         }
 
-        public void MoveVertically(bool isUp, bool isDown, float deltaTime)
+        public void Move(bool isUp, bool isDown, bool isRight, bool isLeft, float deltaTime)
         {
-            lastJumpTime += deltaTime;
+            SaveLastPosition();
+            Position.Y += moveHandler.MoveVertically(isUp, isDown, deltaTime);
+            Position.X += moveHandler.MoveHorizontally(isRight, isLeft, deltaTime);
 
-            if (isDown)
+            if (Position.X < 0)
             {
-                MoveDirection = MoveDirectionType.Down;
-            }
-            else
-            {
-                MoveDirection = MoveDirectionType.None;
-            }
-
-            if (isUp && (lastJumpTime > maxJumpTime * 2))
-            {
-                isJumping = true;
-                lastJumpTime = 0;
-            }
-
-            if (isJumping)
-            {
-                Y -= (int)(jumpSpeed * deltaTime);
-                jumpTime += deltaTime;
-
-                if (jumpTime > maxJumpTime)
-                {
-                    isJumping = false;
-                    jumpTime = 0;
-                }
-
-                MoveDirection = MoveDirectionType.Up;
-            }
-            else
-            {
-                Fall(deltaTime);
+                Position.X = 0;
             }
         }
 
-        protected virtual void Fall(float deltaTime)
+        public void LethalCollision(ForegroundObject enemy, int frameWhenDied)
         {
-            Y += (int)(fallSpeed * deltaTime);
-        }
-
-        public void LethalCollision(ObjectInGame enemy, int frameWhenDied)
-        {
-            if (!(LastPosition.Y < Y))
+            if (!(LastPosition.Y < Position.Y))
             {
                 Die(frameWhenDied);
             }
@@ -79,19 +41,26 @@ namespace TheGame.Objects
             }
         }
 
-        public void MoveHorizontally(bool isRight, bool isLeft, float deltaTime)
+        public void CheckForFallDeath(int currentFrame, int maxHeight)
         {
-            if (isRight)
+            if(Position.Y > maxHeight)
             {
-                MoveRight(deltaTime);
-                MoveDirection = MoveDirectionType.Right;
+                Die(currentFrame);
             }
+        }
 
-            if (isLeft)
+        public void PickUp(Item item, int frame)
+        {
+            if(moveHandler.MoveDirection == MoveDirectionType.Down)
             {
-                MoveLeft(deltaTime);
-                MoveDirection = MoveDirectionType.Left;
-            }
+                item.Die(frame);
+            }            
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, int worldPosition)
+        {
+            var sourceAnimation = animationResolver.GetAnimation(Position.X, moveHandler.MoveDirection);
+            spriteBatch.Draw(Texture, new Vector2(Position.X - worldPosition, Position.Y), sourceAnimation, Color.White, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
         }
     }
 }

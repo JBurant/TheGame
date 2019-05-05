@@ -7,23 +7,42 @@ namespace TheGame
 {
     public class WorldState
     {
+
+        public int WorldPosition { get; set; }
+
         public GameStatistic GameStatistic { get; set; }
         public List<Landscape> Landscape { get; set; }
-        public int WorldPosition { get; set; }
+        public List<Critter> Critters { get; }
+        public List<BackgroundObject> BackgroundObjects { get; }
         public Character Character { get; set; }
+        public List<Item> Items { get; set; }
 
-        public List<ObjectInGame> ObjectsInGame { get; }
-        public IEnumerable<ObjectInGame> AsleepObjects => ObjectsInGame.Where(x => x.State == ObjectStateType.Asleep);
-        public IEnumerable<ObjectInGame> WokenObjects => ObjectsInGame.Where(x => x.State == ObjectStateType.Woken);
-        public IEnumerable<ObjectInGame> DeadObjects => ObjectsInGame.Where(x => x.State == ObjectStateType.Dead);
+        public IEnumerable<Critter> AsleepCritters => Critters.Where(x => x.State == ObjectStateType.Asleep);
+        public IEnumerable<Critter> WokenCritters => Critters.Where(x => x.State == ObjectStateType.Woken);
+        public IEnumerable<Critter> DeadCritters => Critters.Where(x => x.State == ObjectStateType.Dead);
 
-        public IEnumerable<ObjectInGame> AllGameObjects => ObjectsInGame.Concat(Landscape).Concat(new List<ObjectInGame>() { Character});
+        public IEnumerable<ForegroundObject> AllSolidObjects =>
+            Critters.Cast<ForegroundObject>()
+            .Concat(Landscape)
+            .Concat(new List<ForegroundObject>() { Character })
+            .Concat(Items);
 
-        public WorldState(List<ObjectInGame> objectsInGame, List<Landscape> landscape, Character character)
+        public IEnumerable<ObjectInGame> AllGameObjects =>
+            AllSolidObjects.Cast<ObjectInGame>()
+            .Concat(BackgroundObjects);
+
+        public WorldState(
+            List<Critter> critters, 
+            List<BackgroundObject> backgroundObjects, 
+            List<Landscape> landscape,
+            List<Item> items,
+            Character character)
         {
             GameStatistic = new GameStatistic(3);
-            ObjectsInGame = objectsInGame;
+            Critters = critters;
+            BackgroundObjects = backgroundObjects;
             Landscape = landscape;
+            Items = items;
             Character = character;            
 
             WorldPosition = 0;

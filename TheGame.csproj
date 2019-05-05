@@ -42,14 +42,21 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Animation\CritterAnimationResolver.cs" />
+    <Compile Include="Animation\MovingAnimationResolver.cs" />
     <Compile Include="Animation\IAnimationResolver.cs" />
+    <Compile Include="Animation\RotateAnimationResolver.cs" />
     <Compile Include="Animation\StaticAnimationResolver.cs" />
+    <Compile Include="Collision\CollisionResolver.cs" />
     <Compile Include="Configuration\WorldConfiguration.cs" />
     <Compile Include="Configuration\WorldConfigurationParser.cs" />
+    <Compile Include="Enums\GameStateType.cs" />
     <Compile Include="Enums\MoveDirectionType.cs" />
+    <Compile Include="Move\CharacterMoveHandler.cs" />
     <Compile Include="Objects\BackgroundObject.cs" />
+    <Compile Include="Objects\Barrier.cs" />
     <Compile Include="Objects\Critter.cs" />
+    <Compile Include="Objects\ForegroundObject.cs" />
+    <Compile Include="Objects\Item.cs" />
     <Compile Include="Objects\Landscape.cs" />
     <Compile Include="Factories\ObjectsFactory.cs" />
     <Compile Include="Objects\Character.cs" />
@@ -59,6 +66,8 @@
     <Compile Include="Objects\ObjectInGame.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="GameStatistic.cs" />
+    <Compile Include="Objects\RotatingObject.cs" />
+    <Compile Include="Objects\Tulip.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Animation\CharacterAnimationResolver.cs" />

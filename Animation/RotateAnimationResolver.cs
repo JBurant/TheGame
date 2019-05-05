@@ -1,14 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using TheGame.Enums;
 using TheGame.Utilities;
 
 namespace TheGame.Animation
 {
-    public class StaticAnimationResolver : IAnimationResolver
+    public class RotateAnimationResolver : IAnimationResolver
     {
-        private TextureInfo textureInfo;
+        private readonly TextureInfo textureInfo;
 
-        public StaticAnimationResolver(TextureInfo textureInfo)
+        public RotateAnimationResolver(TextureInfo textureInfo)
         {
             this.textureInfo = textureInfo;
         }

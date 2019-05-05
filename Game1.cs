@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 using TheGame.Enums;
 using TheGame.Utilities;
 
@@ -25,9 +26,7 @@ namespace TheGame
             graphics = new GraphicsDeviceManager(this);
             graphics.ToggleFullScreen();
             Content.RootDirectory = "Content";
-            world = new World(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            gameState = new GameState();
-            frameCounter = new FrameCounter(100);
+            gameState = new GameState(3);
         }
 
         /// <summary>
@@ -48,19 +47,19 @@ namespace TheGame
         /// </summary>
         protected override void LoadContent()
         {
+            world = new World(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            frameCounter = new FrameCounter(100);
             gameState.RunState = RunStateType.Loading;
 
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            font = Content.Load<SpriteFont>("Game/GameFont");
 
             world.Load();
-
-            font = Content.Load<SpriteFont>("Game/GameFont");
+            world.SetHitboxes();
 
             foreach (var gameObject in world.WorldState.AllGameObjects)
             {
-                gameObject.Texture = Content.Load<Texture2D>(gameObject.GetTextureFile());
-                gameObject.SetHitbox();
+                gameObject.Texture = Content.Load<Texture2D>(gameObject.TextureFile);
             }
 
             gameState.RunState = RunStateType.Running;
@@ -96,7 +95,9 @@ namespace TheGame
                 world.MoveCharacter(Keyboard.GetState(), deltaTime);
                 world.MoveWorld();
                 world.Move(deltaTime);
+
                 world.WakeUpSleepers();
+                world.RecalculateHitboxes();
                 world.HandleCollisions(frameCounter.Frame);
             }   
 
@@ -116,14 +117,39 @@ namespace TheGame
 
             if(gameState.RunState == RunStateType.Running)
             {
-                foreach(var gameObject in world.WorldState.AllGameObjects)
+                foreach(var gameObject in world.WorldState.BackgroundObjects)
                 {
-                    gameObject.Draw(spriteBatch);
+                    gameObject.Draw(spriteBatch, world.WorldState.WorldPosition);
                 }
+
+                foreach (var gameObject in world.WorldState.Landscape)
+                {
+                    gameObject.Draw(spriteBatch, world.WorldState.WorldPosition);
+                }
+
+                foreach (var gameObject in world.WorldState.Critters)
+                {
+                    gameObject.Draw(spriteBatch, world.WorldState.WorldPosition);
+                }
+
+                foreach (var item in world.WorldState.Items)
+                {
+                    item.Draw(spriteBatch, world.WorldState.WorldPosition);
+                }
+
+                world.WorldState.Character.Draw(spriteBatch, world.WorldState.WorldPosition);
             }
             else if (gameState.RunState == RunStateType.Finishing)
             {
-                spriteBatch.DrawString(font, "U DED", new Vector2(100, 100), Color.Black);
+                if(gameState.ProgressState == GameStateType.Lost)
+                {
+                    spriteBatch.DrawString(font, "U DED", new Vector2(100, 100), Color.Black);
+                }
+
+                if(gameState.ProgressState == GameStateType.Won)
+                {
+                    spriteBatch.DrawString(font, "You WIN!!!", new Vector2(100, 100), Color.Black);
+                }
             }
 
             spriteBatch.End();
@@ -133,9 +159,24 @@ namespace TheGame
 
         private void CheckGameState()
         {
+            if(world.WorldState.Items.FirstOrDefault(x => x.TextureFile == "Game/Tulip").State == ObjectStateType.Dead)
+            {
+                gameState.ProgressState = GameStateType.Won;
+                gameState.RunState = RunStateType.Finishing;
+            }
+
             if(world.WorldState.Character.State == ObjectStateType.Dead)
             {
-                gameState.RunState = RunStateType.Finishing;
+                if(gameState.GameStatistic.Lives > 0)
+                {
+                    gameState.GameStatistic.Lives--;
+                    LoadContent();
+                }
+                else
+                {
+                    gameState.ProgressState = GameStateType.Lost;
+                    gameState.RunState = RunStateType.Finishing;
+                }
             }
         }
     }

@@ -11,14 +11,14 @@ namespace TheGame.Factories
             return new Character(x, y, textureInfo);
         }
 
-        public ObjectInGame GetCow(int x, int y, TextureInfo textureInfo)
+        public Critter GetCow(int x, int y, TextureInfo textureInfo)
         {
-            return new Critter(x, y, textureInfo, 20f, MoveDirectionType.Left);
+            return new Critter(x, y, textureInfo, 3f, 60, MoveDirectionType.Left);
         }
 
         public BackgroundObject GetBackground(TextureInfo textureInfo)
         {
-            return new BackgroundObject(0, 0, textureInfo, 1);
+            return new BackgroundObject(0, 0, textureInfo, 2);
         }
 
         public Landscape GetLandscape(int x, int y, TextureInfo textureInfo)
@@ -26,19 +26,29 @@ namespace TheGame.Factories
             return new Landscape(x, y, textureInfo);
         }
 
-        public ObjectInGame GetTree(int x, int y, TextureInfo textureInfo)
+        public Landscape GetTree(int x, int y, TextureInfo textureInfo)
         {
-            return new ObjectInGame(x, y, textureInfo, 3);
+            return new Landscape(x, y, textureInfo);
         }
 
-        public BackgroundObject GetCloud(int x, int y, TextureInfo textureInfo)
+        public BackgroundObject GetBackgroundObject(int x, int y, TextureInfo textureInfo)
         {
             return new BackgroundObject(x, y, textureInfo, 1);
         }
 
-        public BackgroundObject GetCloud2(int x, int y, TextureInfo textureInfo)
+        public BackgroundObject GetBackgroundObject(int x, int y, TextureInfo textureInfo, float scale)
         {
-            return new BackgroundObject(x, y, textureInfo, 1);
+            return new BackgroundObject(x, y, textureInfo, scale);
+        }
+
+        public RotatingObject GetRotatingObject(int x, int y, TextureInfo textureInfo)
+        {
+            return new RotatingObject(x, y, textureInfo);
+        }
+
+        public Tulip GetTulip(int x, int y, TextureInfo textureInfo)
+        {
+            return new Tulip(x, y, textureInfo);
         }
     }
 }

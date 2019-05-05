@@ -5,24 +5,35 @@ using TheGame.Utilities;
 
 namespace TheGame.Objects
 {
-    public class Critter : ObjectInGame
+    public class Critter : ForegroundObject
     {
-        public Critter(int x, int y, TextureInfo textureInfo, float speed, MoveDirectionType initialMoveDirection) : base(x, y, textureInfo, true, initialMoveDirection)
+        protected int speed;
+
+        public Critter(int x, int y, TextureInfo textureInfo, float scale, int speed, MoveDirectionType initialMoveDirection) : base(x, y, textureInfo, scale, initialMoveDirection)
         {
-            Speed = speed;
-            animationResolver = new CritterAnimationResolver(textureInfo, new int[] { 1, 3 }, new int[] { 2, 4 });
+            this.speed = speed;
+        }
+
+        protected override void Initialize(TextureInfo textureInfo)
+        {
+            animationResolver = new MovingAnimationResolver(textureInfo, new int[] { 0, 2 }, new int[] { 1, 3 });
         }
 
         public override void Move(float deltaTime)
         {
             if(MoveDirection == MoveDirectionType.Left)
             {
-                MoveLeft(deltaTime);
+                Position.X -= (int)(speed * deltaTime);
             }
 
             if(MoveDirection == MoveDirectionType.Right)
             {
-                MoveRight(deltaTime);
+                Position.X += (int)(speed * deltaTime);
+            }
+
+            if (Position.X < 0)
+            {
+                Position.X = 0;
             }
         }
 

@@ -10,6 +10,8 @@
         RightDown,
         RightUp,
         LeftDown,
-        LeftUp
+        LeftUp,
+        RotateRight,
+        RotateLeft
     }
 }
