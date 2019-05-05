@@ -5,3 +5,6 @@
 *.xnb
 *.exe
 *.mgcontent
+*.pdb
+*.pdb
+bin/DesktopGL/AnyCPU/Debug/Content/Game/Character.xnb

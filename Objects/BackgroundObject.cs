@@ -17,10 +17,10 @@ namespace TheGame.Objects
             animationResolver = new StaticAnimationResolver(textureInfo);
         }
 
-        public override void Draw(SpriteBatch spriteBatch, int minX)
+        public override void Draw(SpriteBatch spriteBatch, int worldPosition)
         {
             var sourceAnimation = animationResolver.GetAnimation(Position.X, Enums.MoveDirectionType.None);
-            spriteBatch.Draw(Texture, new Vector2(Position.X - minX, Position.Y), sourceAnimation, Color.White, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture, new Vector2(Position.X - worldPosition, Position.Y), sourceAnimation, Color.White, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
         }
     }
 }

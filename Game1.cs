@@ -19,6 +19,7 @@ namespace TheGame
         private GameState gameState;
 
         private SpriteFont font;
+        private SpriteFont gameStatFont; 
         private FrameCounter frameCounter;
 
         public Game1()
@@ -53,6 +54,7 @@ namespace TheGame
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("Game/GameFont");
+            gameStatFont = Content.Load<SpriteFont>("Game/GameStatFont");
 
             world.Load();
             world.SetHitboxes();
@@ -115,6 +117,7 @@ namespace TheGame
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
+
             if(gameState.RunState == RunStateType.Running)
             {
                 foreach(var gameObject in world.WorldState.BackgroundObjects)
@@ -138,6 +141,10 @@ namespace TheGame
                 }
 
                 world.WorldState.Character.Draw(spriteBatch, world.WorldState.WorldPosition);
+
+                spriteBatch.DrawString(gameStatFont, "Level: " + gameState.GameStatistic.Level, new Vector2(30, 30), Color.Black);
+                spriteBatch.DrawString(gameStatFont, "Score: " + gameState.GameStatistic.Score, new Vector2(160, 30), Color.Black);
+                spriteBatch.DrawString(gameStatFont, "Lives: " + gameState.GameStatistic.Lives, new Vector2(290, 30), Color.Black);
             }
             else if (gameState.RunState == RunStateType.Finishing)
             {
