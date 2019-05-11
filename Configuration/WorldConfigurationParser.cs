@@ -58,8 +58,8 @@ namespace TheGame.Configuration
                     break;
                 case "Game/Windmill": backgroundObjects.Add(objectsFactory.GetBackgroundObject(x, y, objectSpecification.TextureInfo, 3));
                     break;
-                case "Game/Windmill-blade": critters.Add(objectsFactory.GetRotatingObject(x, y, objectSpecification.TextureInfo));
-                    break;
+                /*case "Game/Windmill-blade": critters.Add(objectsFactory.GetRotatingObject(x, y, objectSpecification.TextureInfo));
+                    break;*/
                 case "Game/Land": landscape.Add(objectsFactory.GetLandscape(x, y, objectSpecification.TextureInfo));
                     break;
                 case "Game/HighLand": landscape.Add(objectsFactory.GetLandscape(x, y, objectSpecification.TextureInfo));

@@ -14,19 +14,19 @@ namespace TheGame.Objects
         public int FrameWhenDied { get; set; }
 
         public Rectangle Hitbox { get; set; }
-
-        protected MoveDirectionType MoveDirection { get; set; }
         public Point LastPosition { get; set; }
 
-        public ForegroundObject(int x, int y, TextureInfo textureInfo, float scale, MoveDirectionType initialMoveDirection) : base(x, y, textureInfo, scale)
-        {
-            MoveDirection = initialMoveDirection;
-            Initialize(textureInfo);
-        }
+        private readonly int score;
 
         public ForegroundObject(int x, int y, TextureInfo textureInfo, float scale) : base(x, y, textureInfo, scale)
         {
-            MoveDirection = MoveDirectionType.None;
+            score = 0;
+            Initialize(textureInfo);
+        }
+
+        public ForegroundObject(int x, int y, TextureInfo textureInfo, float scale, int score) : base(x, y, textureInfo, scale)
+        {
+            this.score = score;
             Initialize(textureInfo);
         }
 
@@ -36,29 +36,16 @@ namespace TheGame.Objects
             animationResolver = new MovingAnimationResolver(textureInfo, new int[] { 0, 0 }, new int[] { 0, 0 });
         }
 
-        public virtual void Move(float deltaTime)
-        {
-        }
-
         public void SetHitbox()
         {
             Hitbox = new Rectangle(Position,Size);
         }
 
-        public virtual void NonLethalCollision(Rectangle hitbox2)
-        {
-            Position = CollisionResolver.SolidObjectsCollision(Hitbox, hitbox2, Position, LastPosition);
-        }
-
-        public virtual bool DetectCollision(Rectangle hitbox2)
-        {
-            return CollisionResolver.DetectCollision(Hitbox, hitbox2);
-        }
-
-        public virtual void Die(int frameWhenDied)
+        public virtual int Die(int frameWhenDied)
         {
             FrameWhenDied = frameWhenDied;
             State = ObjectStateType.Dead;
+            return score;
         }
 
         public void SaveLastPosition()
@@ -68,7 +55,7 @@ namespace TheGame.Objects
 
         public override void Draw(SpriteBatch spriteBatch, int worldPosition)
         {
-            var sourceAnimation = animationResolver.GetAnimation(Position.X, MoveDirection);
+            var sourceAnimation = animationResolver.GetAnimation(Position.X, MoveDirectionType.None);
             spriteBatch.Draw(Texture, new Vector2(Position.X - worldPosition, Position.Y), sourceAnimation, Color.White, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
         }
     }

@@ -1,15 +1,13 @@
-﻿using Microsoft.Xna.Framework;
-using TheGame.Animation;
-using TheGame.Enums;
+﻿using TheGame.Animation;
 using TheGame.Utilities;
 
 namespace TheGame.Objects
 {
-    public class RotatingObject : Critter
+    public class RotatingObject : ForegroundObject
     {
-        private float angle;
+        // private readonly float angle;
 
-        public RotatingObject(int x, int y, TextureInfo textureInfo) : base(x, y, textureInfo, 3f, 10, MoveDirectionType.RotateRight)
+        public RotatingObject(int x, int y, TextureInfo textureInfo) : base(x, y, textureInfo, 3f)
         {
         }
 
@@ -18,8 +16,8 @@ namespace TheGame.Objects
             animationResolver = new StaticAnimationResolver(textureInfo);
         }
 
-        public override void Move(float deltaTime)
-        {
+        public void Move(float deltaTime)
+        {/*
             if (MoveDirection == MoveDirectionType.RotateRight)
             {
                 angle += speed * deltaTime;
@@ -33,7 +31,7 @@ namespace TheGame.Objects
             if (MoveDirection == MoveDirectionType.RotateLeft)
             {
                 Position.X += (int)(speed * deltaTime);
-            }
+            }*/
         }
     }
 }

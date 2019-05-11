@@ -4,7 +4,7 @@
     {
         public uint Level { get; set; }
         public uint Lives { get; set; }
-        public uint Score { get; set; }
+        public int Score { get; set; }
 
         public GameStatistic(uint initialNoOfLives)
         {

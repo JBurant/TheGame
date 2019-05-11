@@ -10,8 +10,8 @@ namespace TheGame
     {
         public WorldState WorldState { get; set; }
         private const int DeadCountdown = 80;
-        private const float MoveWorldTresholdRight = 0.8f;
-        private const float MoveWorldTresholdLeft = 0.2f;
+        private const float MoveWorldTresholdRight = 0.6f;
+        private const float MoveWorldTresholdLeft = 0.4f;
         private readonly WorldConfigurationParser worldConfigurationParser;
         private readonly int windowWidth;
         private readonly int windowHeight;
@@ -30,10 +30,10 @@ namespace TheGame
 
         public void Move(float deltaTime)
         {
-            foreach(var objectInGame in WorldState.WokenCritters)
+            foreach(var critter in WorldState.WokenCritters)
             {
-                objectInGame.SaveLastPosition();
-                objectInGame.Move(deltaTime);
+                critter.SaveLastPosition();
+                critter.Move(deltaTime);
             }
         }
 
@@ -81,47 +81,37 @@ namespace TheGame
             }
         }
 
-
-        public void HandleCollisions(int currentFrame)
+        public int HandleCollisions(int currentFrame)
         {
+            int scoreChange = 0;
+
             //Collide Character
             foreach (var landscape in WorldState.Landscape)
             {
-                if (WorldState.Character.DetectCollision(landscape.Hitbox))
-                {
-                    WorldState.Character.NonLethalCollision(landscape.Hitbox);
-                }
+                WorldState.Character.LandscapeCollision(landscape);
             }
 
             foreach (var item in WorldState.Items)
             {
-                if (WorldState.Character.DetectCollision(item.Hitbox))
-                {
-                    WorldState.Character.PickUp(item, currentFrame);
-                }
+                scoreChange += WorldState.Character.ItemCollision(item, currentFrame);
             }
 
             foreach (var objectInGame in WorldState.WokenCritters)
             {
-                if (WorldState.Character.DetectCollision(objectInGame.Hitbox))
-                {
-                    WorldState.Character.LethalCollision(objectInGame, currentFrame);
-                }
+                scoreChange += WorldState.Character.LethalCollision(objectInGame, currentFrame);
             }
 
             //Collide objects with each other
             foreach (var objectInGame in WorldState.WokenCritters)
             {
-                foreach (var objectInGame2 in WorldState.Landscape)
+                foreach (var landscape in WorldState.Landscape)
                 {
-                    if (objectInGame.DetectCollision(objectInGame2.Hitbox))
-                    {
-                        objectInGame.NonLethalCollision(objectInGame2.Hitbox);
-                    }
+                    objectInGame.LandscapeCollision(landscape);
                 }
             }
 
-            WorldState.Character.CheckForFallDeath(currentFrame, windowHeight);
+            scoreChange += WorldState.Character.CheckForFallDeath(currentFrame, windowHeight);
+            return scoreChange;
         }
 
         public void MoveCharacter(KeyboardState keyboardState, float deltaTime)

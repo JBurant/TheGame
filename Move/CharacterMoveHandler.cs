@@ -4,16 +4,15 @@ namespace TheGame.Move
 {
     public class CharacterMoveHandler
     {
-        public MoveDirectionType MoveDirection{ get; private set; }
-
         private const float maxJumpTime = 0.75f;
 
         private readonly int speed;
         private readonly int jumpSpeed;
         private readonly int fallSpeed;
 
-        private bool isJumping;
+        public MoveDirectionType moveDirection;
 
+        private bool isJumping;
         private float jumpTime;
         private float lastJumpTime;
 
@@ -28,13 +27,13 @@ namespace TheGame.Move
         {
             if (isRight)
             {
-                MoveDirection = MoveDirectionType.Right;
+                moveDirection = MoveDirectionType.Right;
                 return (int)(speed * deltaTime);
             }
 
             if (isLeft)
             {
-                MoveDirection = MoveDirectionType.Left;
+                moveDirection = MoveDirectionType.Left;
                 return -(int)(speed * deltaTime);
             }
 
@@ -49,11 +48,11 @@ namespace TheGame.Move
 
             if (isDown)
             {
-                MoveDirection = MoveDirectionType.Down;
+                moveDirection = MoveDirectionType.Down;
             }
             else
             {
-                MoveDirection = MoveDirectionType.None;
+                moveDirection = MoveDirectionType.None;
             }
 
             if (isUp)
@@ -65,7 +64,7 @@ namespace TheGame.Move
             {
                 move = - (int)(jumpSpeed * deltaTime);
                 jumpTime += deltaTime;
-                MoveDirection = MoveDirectionType.Up;
+                moveDirection = MoveDirectionType.Up;
 
                 if (jumpTime > maxJumpTime)
                 {
@@ -79,6 +78,11 @@ namespace TheGame.Move
             }
 
             return move;
+        }
+
+        public bool IsPickingUp()
+        {
+            return moveDirection == MoveDirectionType.Down ? true : false;
         }
 
         private void HandleJump(float deltaTime)

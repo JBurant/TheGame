@@ -7,15 +7,15 @@ namespace TheGame
 {
     public class WorldState
     {
-
         public int WorldPosition { get; set; }
 
         public GameStatistic GameStatistic { get; set; }
-        public List<Landscape> Landscape { get; set; }
-        public List<Critter> Critters { get; }
-        public List<BackgroundObject> BackgroundObjects { get; }
         public Character Character { get; set; }
+
+        public List<BackgroundObject> BackgroundObjects { get; }
+        public List<Critter> Critters { get; }
         public List<Item> Items { get; set; }
+        public List<Landscape> Landscape { get; set; }
 
         public IEnumerable<Critter> AsleepCritters => Critters.Where(x => x.State == ObjectStateType.Asleep);
         public IEnumerable<Critter> WokenCritters => Critters.Where(x => x.State == ObjectStateType.Woken);

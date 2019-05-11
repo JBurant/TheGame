@@ -13,13 +13,9 @@ namespace TheGame
     public class Game1 : Game
     {
         private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
-
         private World world;
         private GameState gameState;
-
-        private SpriteFont font;
-        private SpriteFont gameStatFont; 
+        private DrawHandler drawHandler;
         private FrameCounter frameCounter;
 
         public Game1()
@@ -52,9 +48,10 @@ namespace TheGame
             frameCounter = new FrameCounter(100);
             gameState.RunState = RunStateType.Loading;
 
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = Content.Load<SpriteFont>("Game/GameFont");
-            gameStatFont = Content.Load<SpriteFont>("Game/GameStatFont");
+            drawHandler = new DrawHandler(
+                new SpriteBatch(GraphicsDevice), 
+                Content.Load<SpriteFont>("Game/GameFont"),
+                Content.Load<SpriteFont>("Game/GameStatFont"));
 
             world.Load();
             world.SetHitboxes();
@@ -91,6 +88,7 @@ namespace TheGame
 
             if (gameState.RunState == RunStateType.Running)
             {
+                
                 CheckGameState();
                 world.CheckState(frameCounter);
 
@@ -100,7 +98,7 @@ namespace TheGame
 
                 world.WakeUpSleepers();
                 world.RecalculateHitboxes();
-                world.HandleCollisions(frameCounter.Frame);
+                gameState.GameStatistic.Score += world.HandleCollisions(frameCounter.Frame);
             }   
 
             base.Update(gameTime);
@@ -114,52 +112,15 @@ namespace TheGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
-            spriteBatch.Begin();
-
-
-            if(gameState.RunState == RunStateType.Running)
+            if (gameState.RunState == RunStateType.Running)
             {
-                foreach(var gameObject in world.WorldState.BackgroundObjects)
-                {
-                    gameObject.Draw(spriteBatch, world.WorldState.WorldPosition);
-                }
-
-                foreach (var gameObject in world.WorldState.Landscape)
-                {
-                    gameObject.Draw(spriteBatch, world.WorldState.WorldPosition);
-                }
-
-                foreach (var gameObject in world.WorldState.Critters)
-                {
-                    gameObject.Draw(spriteBatch, world.WorldState.WorldPosition);
-                }
-
-                foreach (var item in world.WorldState.Items)
-                {
-                    item.Draw(spriteBatch, world.WorldState.WorldPosition);
-                }
-
-                world.WorldState.Character.Draw(spriteBatch, world.WorldState.WorldPosition);
-
-                spriteBatch.DrawString(gameStatFont, "Level: " + gameState.GameStatistic.Level, new Vector2(30, 30), Color.Black);
-                spriteBatch.DrawString(gameStatFont, "Score: " + gameState.GameStatistic.Score, new Vector2(160, 30), Color.Black);
-                spriteBatch.DrawString(gameStatFont, "Lives: " + gameState.GameStatistic.Lives, new Vector2(290, 30), Color.Black);
+                drawHandler.DrawWorld(world.WorldState);
+                drawHandler.DrawStats(gameState.GameStatistic);
             }
             else if (gameState.RunState == RunStateType.Finishing)
             {
-                if(gameState.ProgressState == GameStateType.Lost)
-                {
-                    spriteBatch.DrawString(font, "U DED", new Vector2(100, 100), Color.Black);
-                }
-
-                if(gameState.ProgressState == GameStateType.Won)
-                {
-                    spriteBatch.DrawString(font, "You WIN!!!", new Vector2(100, 100), Color.Black);
-                }
+                drawHandler.DrawFinish(gameState);
             }
-
-            spriteBatch.End();
 
             base.Draw(gameTime);
         }

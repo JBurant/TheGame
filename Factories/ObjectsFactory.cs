@@ -13,7 +13,7 @@ namespace TheGame.Factories
 
         public Critter GetCow(int x, int y, TextureInfo textureInfo)
         {
-            return new Critter(x, y, textureInfo, 3f, 60, MoveDirectionType.Left);
+            return new Critter(x, y, textureInfo, 3f, 60, MoveDirectionType.Left, 50);
         }
 
         public BackgroundObject GetBackground(TextureInfo textureInfo)
@@ -46,9 +46,9 @@ namespace TheGame.Factories
             return new RotatingObject(x, y, textureInfo);
         }
 
-        public Tulip GetTulip(int x, int y, TextureInfo textureInfo)
+        public Item GetTulip(int x, int y, TextureInfo textureInfo)
         {
-            return new Tulip(x, y, textureInfo);
+            return new Item(x, y, textureInfo, 200);
         }
     }
 }
