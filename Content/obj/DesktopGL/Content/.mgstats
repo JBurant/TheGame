@@ -1,0 +1,17 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Character.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Character.xnb","TextureProcessor","Texture2DContent",10073,36933,0.2716579
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Cheese.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Cheese.xnb","TextureProcessor","Texture2DContent",1830,393385,0.0232269
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Cloud.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Cloud.xnb","TextureProcessor","Texture2DContent",4157,54517,0.0063756
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Cloud2.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Cloud2.xnb","TextureProcessor","Texture2DContent",3668,50773,0.0040248
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Cow.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Cow.xnb","TextureProcessor","Texture2DContent",7665,12981,0.0062559
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Cow2.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Cow2.xnb","TextureProcessor","Texture2DContent",8652,3185,0.0026246
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/GameFont.spritefont","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/GameFont.xnb","FontDescriptionProcessor","SpriteFontContent",2068,70690,0.1741223
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/GameStatFont.spritefont","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/GameStatFont.xnb","FontDescriptionProcessor","SpriteFontContent",2068,37922,0.017789
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/HighLand.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/HighLand.xnb","TextureProcessor","Texture2DContent",6053,172885,0.0090828
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Land.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Land.xnb","TextureProcessor","Texture2DContent",4129,380085,0.0144869
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/sky.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/sky.xnb","TextureProcessor","Texture2DContent",1603,422485,0.0130928
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Template.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Template.xnb","TextureProcessor","Texture2DContent",4429,629461,0.0214271
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Tree.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Tree.xnb","TextureProcessor","Texture2DContent",9772,6101,0.0023661
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Tulip.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Tulip.xnb","TextureProcessor","Texture2DContent",1591,661,0.0015641
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Windmill.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Windmill.xnb","TextureProcessor","Texture2DContent",11478,8005,0.002921
+"C:/Users/Jirka/source/repos/TheGame/Content/Game/Windmill-blade.png","C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/Windmill-blade.xnb","TextureProcessor","Texture2DContent",631,1849,0.0015982

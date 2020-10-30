@@ -12,7 +12,6 @@ namespace TheGame.Objects
     {
         public ObjectStateType State { get; set; }
         public int FrameWhenDied { get; set; }
-
         public Rectangle Hitbox { get; set; }
         public Point LastPosition { get; set; }
 

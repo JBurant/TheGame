@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Jirka/source/repos/TheGame/Content/Game/GameFont.spritefont</SourceFile>
+  <SourceFile>C:/Users/Jirka/source/repos/TheGame/Content/Game/GameStatFont.spritefont</SourceFile>
   <SourceTime>2020-10-30T15:26:30.434191+01:00</SourceTime>
-  <DestFile>C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/GameFont.xnb</DestFile>
-  <DestTime>2020-10-30T18:40:10.2031801+01:00</DestTime>
+  <DestFile>C:/Users/Jirka/source/repos/TheGame/Content/bin/DesktopGL/Content/Game/GameStatFont.xnb</DestFile>
+  <DestTime>2020-10-30T18:40:10.221844+01:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2020-08-10T16:17:54+02:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>

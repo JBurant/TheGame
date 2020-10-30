@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Profile>Reach</Profile>
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Character.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Cheese.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Cloud.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Cloud2.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Cow.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Cow2.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/GameFont.spritefont</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Land.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/sky.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Template.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Tree.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Tulip.png</File>
-    <File>C:/Users/jirib/source/repos/TheGame/TheGame/Content/Game/Windmill.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Character.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Cheese.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Cloud.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Cloud2.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Cow.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Cow2.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/GameFont.spritefont</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/GameStatFont.spritefont</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/HighLand.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Land.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/sky.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Template.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Tree.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Tulip.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Windmill.png</File>
+    <File>C:/Users/Jirka/source/repos/TheGame/Content/Game/Windmill-blade.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
